@@ -76,57 +76,60 @@ export default function GastosPage() {
   }, [selectedMonth, selectedYear, viewType])
 
   const loadAllData = async () => {
-    setIsLoading(true)
-    try {
-      const currentPeriod = getCurrentPeriodLabel()
-      console.log(`📊 Cargando datos para: ${currentPeriod}`)
+  setIsLoading(true)
+  try {
+    const currentPeriod = getCurrentPeriodLabel()
+    console.log(`📊 Cargando datos para: ${currentPeriod}`)
 
-      // Determinar parámetros según el tipo de vista
-      const monthParam = viewType === "monthly" ? selectedMonth : undefined
-      const yearParam = viewType === "yearly" ? selectedYear : undefined
-
-      console.log(`🔍 Parámetros de consulta:`, { monthParam, yearParam, viewType })
-
-      // Cargar datos principales
-      const [categoriesData, expensesData, incomeData, salesData, inventoryData] = await Promise.all([
-        ExpenseService.getCategories(),
-        ExpenseService.getExpenses(monthParam, yearParam),
-        ExpenseService.getIncomeSources(monthParam, yearParam),
-        ExpenseService.getSalesIncome(monthParam, yearParam),
-        ExpenseService.getInventoryInvestment(monthParam, yearParam),
-      ])
-
-      // Cargar movimientos de inventario por separado para manejar errores
-      let movementsData: InventoryMovementDisplay[] = []
-      try {
-        movementsData = await ExpenseService.getInventoryMovements(monthParam, yearParam)
-      } catch (movementError) {
-        console.error("❌ Error cargando movimientos de inventario:", movementError)
-        // Continuar sin los movimientos si hay error
-      }
-
-      setCategories(categoriesData)
-      setExpenses(expensesData)
-      setIncomeSources(incomeData)
-      setSalesIncome(salesData)
-      setInventoryInvestment(inventoryData)
-      setInventoryMovements(movementsData)
-
-      console.log(`✅ Datos cargados para ${currentPeriod}:`, {
-        categorias: categoriesData.length,
-        gastos: expensesData.length,
-        ingresos: incomeData.length,
-        ventas: salesData,
-        materiales: inventoryData,
-        movimientos: movementsData.length,
-      })
-    } catch (error) {
-      console.error("❌ Error al cargar datos:", error)
-      toast.error("Error al cargar datos")
-    } finally {
-      setIsLoading(false)
+    // Construir parámetro mes en formato "YYYY-MM" o undefined
+    let monthQueryParam: string | undefined = undefined
+    if (viewType === "monthly" && selectedMonth) {
+      monthQueryParam = selectedMonth // ya está en formato "YYYY-MM"
     }
+
+    // NOTA: En tu ExpenseService no hay soporte para filtro por año solamente, así que no uses yearParam
+    // Si tienes funciones para año, deberías ajustarlas o implementar la lógica.
+
+    console.log(`🔍 Parámetros de consulta:`, { monthQueryParam, viewType })
+
+    const [categoriesData, expensesData, incomeData, salesData, inventoryData] = await Promise.all([
+      ExpenseService.getCategories(),
+      ExpenseService.getExpenses(monthQueryParam),            // <-- Solo un argumento
+      ExpenseService.getIncomeSources(monthQueryParam),
+      ExpenseService.getSalesIncome(monthQueryParam),
+      ExpenseService.getInventoryInvestment(monthQueryParam),
+    ])
+
+    let movementsData: InventoryMovementDisplay[] = []
+    try {
+      movementsData = await ExpenseService.getInventoryMovements(monthQueryParam)
+    } catch (movementError) {
+      console.error("❌ Error cargando movimientos de inventario:", movementError)
+    }
+
+    setCategories(categoriesData)
+    setExpenses(expensesData)
+    setIncomeSources(incomeData)
+    setSalesIncome(salesData)
+    setInventoryInvestment(inventoryData)
+    setInventoryMovements(movementsData)
+
+    console.log(`✅ Datos cargados para ${currentPeriod}:`, {
+      categorias: categoriesData.length,
+      gastos: expensesData.length,
+      ingresos: incomeData.length,
+      ventas: salesData,
+      materiales: inventoryData,
+      movimientos: movementsData.length,
+    })
+  } catch (error) {
+    console.error("❌ Error al cargar datos:", error)
+    toast.error("Error al cargar datos")
+  } finally {
+    setIsLoading(false)
   }
+}
+
 
   const handleDataChange = () => {
     console.log("🔄 Recargando datos por cambio...")
