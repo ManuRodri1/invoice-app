@@ -23,17 +23,18 @@ export function FrequentCustomersTable({ invoices }: FrequentCustomersTableProps
   const itemsPerPage = 10
 
   // Filtrar facturas por rango de fechas
-  useEffect(() => {
-    if (isFiltered && dateRange.startDate && dateRange.endDate) {
-      const filtered = invoices.filter((invoice) => {
-        const invoiceDate = new Date(invoice.created_at)
-        return invoiceDate >= dateRange.startDate! && invoiceDate <= dateRange.endDate!
-      })
-      setFilteredInvoices(filtered)
-    } else {
-      setFilteredInvoices(invoices)
-    }
-  }, [invoices, dateRange, isFiltered])
+useEffect(() => {
+  if (isFiltered && dateRange.from && dateRange.to) {
+    const filtered = invoices.filter((invoice) => {
+      const invoiceDate = new Date(invoice.created_at)
+      return invoiceDate >= dateRange.from && invoiceDate <= dateRange.to
+    })
+    setFilteredInvoices(filtered)
+  } else {
+    // No hay filtro activo: mostrar todas las facturas
+    setFilteredInvoices(invoices)
+  }
+}, [invoices, dateRange, isFiltered])
 
   // Calcular estadísticas por cliente
   const customerStats = filteredInvoices.reduce(
