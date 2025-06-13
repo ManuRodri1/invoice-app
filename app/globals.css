@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================
+   INICIO: CONFIGURACIÓN DE TEMA Y COLORES
+   ========================================= */
+@layer base {
+  :root {
+    /* Colores principales del tema */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+
+    /* Color primario - Naranja (#EC8330) */
+    --primary: 24 81% 56%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Colores secundarios y de utilidad */
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+
+    /* Color de acento - Verde Lima (#8DC73F) */
+    --accent: 84 56% 51%;
+    --accent-foreground: 0 0% 0%;
+
+    /* Color destructivo (rojo) */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Colores de borde e input */
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 24 81% 56%;
+
+    /* Radio de bordes */
+    --radius: 0.5rem;
+  }
+
+  /* Configuración del tema oscuro */
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 24 81% 56%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 84 56% 51%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 24 81% 56%;
+  }
+}
+/* =========================================
+   FIN: CONFIGURACIÓN DE TEMA Y COLORES
+   ========================================= */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* =========================================
+   INICIO: ESTILOS PERSONALIZADOS DE MARCA
+   ========================================= */
+/* Gradiente de marca - Naranja (#EC8330) */
+.brand-gradient {
+  background: linear-gradient(135deg, #EC8330 0%, #8DC73F 100%);
+}
+
+/* Sombra de marca - Naranja suave */
+.brand-shadow {
+  box-shadow: 0 4px 14px rgba(236, 131, 48, 0.25);
+}
+/* =========================================
+   FIN: ESTILOS PERSONALIZADOS DE MARCA
+   ========================================= */
+
+/* =========================================
+   INICIO: CONFIGURACIÓN DE IMPRESIÓN
+   ========================================= */
+@media print {
+  @page {
+    size: A4;
+    margin: 1cm;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+/* =========================================
+   FIN: CONFIGURACIÓN DE IMPRESIÓN
+   ========================================= */
+
+/* =========================================
+   INICIO: UTILIDADES RESPONSIVAS
+   ========================================= */
+/* Ocultar elementos en móvil */
+.hide-on-mobile {
+  @apply hidden md:block;
+}
+
+/* Mostrar elementos solo en móvil */
+.show-on-mobile {
+  @apply block md:hidden;
+}
+
+/* Ajustes para tablas responsivas */
+.responsive-table-container {
+  @apply w-full overflow-x-auto;
+}
+
+/* Ajustes para tarjetas responsivas */
+.responsive-card {
+  @apply w-full md:w-auto;
+}
+/* =========================================
+   FIN: UTILIDADES RESPONSIVAS
+   ========================================= */
